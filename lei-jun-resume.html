@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>雷军 · 个人简历</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            }
+          },
+          fontFamily: {
+            serif: ['"Noto Serif SC"', 'serif'],
+            mono: ['"DM Mono"', 'monospace'],
+            display: ['"Playfair Display"', 'serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      color: #1e293b;
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    /* 3D Canvas Background */
+    #3d-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.4;
+    }
+
+    /* Page fade-in */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .55s cubic-bezier(.22,.68,0,1.2) both; }
+    .delay-1 { animation-delay: .08s; }
+    .delay-2 { animation-delay: .16s; }
+    .delay-3 { animation-delay: .24s; }
+    .delay-4 { animation-delay: .32s; }
+    .delay-5 { animation-delay: .40s; }
+    .delay-6 { animation-delay: .48s; }
+
+    /* Timeline */
+    .timeline-item { position: relative; padding-left: 1.5rem; }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: .45rem;
+      width: 6px; height: 6px;
+      background: #64748b;
+      border-radius: 50%;
+    }
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: 2.5px; top: 1.1rem;
+      width: 1px;
+      bottom: 0;
+      background: #e2e8f0;
+    }
+    .timeline-item:last-child::after { display: none; }
+
+    /* Skill tag */
+    .tag {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .04em;
+      padding: .3rem .75rem;
+      border-radius: 3px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    .tag:hover {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    /* Divider rule */
+    hr.rule { border-color: #e2e8f0; }
+
+    /* Glass card effect */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(226, 232, 240, 0.5);
+    }
+
+    /* Star rating for zodiac */
+    .zodiac-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    /* Stat card */
+    .stat-card {
+      border-left: 3px solid #64748b;
+      padding-left: 1rem;
+      transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+      border-left-color: #475569;
+      transform: translateX(4px);
+    }
+
+    @media print {
+      body { background: white; }
+      #3d-background { display: none; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4">
+
+  <!-- 3D Background Canvas -->
+  <canvas id="3d-background"></canvas>
+
+  <!-- ── PAPER ─────────────────────────────────────────── -->
+  <div class="max-w-4xl mx-auto glass-card shadow-2xl rounded-lg overflow-hidden">
+
+    <!-- ── HEADER ── -->
+    <header class="px-12 pt-12 pb-10 fade-up" style="border-bottom: 2px solid #e2e8f0;">
+      <div class="flex items-end justify-between gap-6 flex-wrap">
+        <!-- Name block -->
+        <div>
+          <p class="section-label mb-3">Executive Profile</p>
+          <h1 class="font-display text-5xl font-bold text-slate-800 leading-none tracking-tight">
+            雷军
+          </h1>
+          <p class="mt-3 text-slate-600 text-sm font-mono tracking-wide">Lei Jun · 小米集团创始人兼董事长</p>
+          <!-- Zodiac Info -->
+          <div class="mt-4">
+            <span class="zodiac-badge">
+              ♐ 射手座 (1969.12.08)
+            </span>
+          </div>
+        </div>
+
+        <!-- Contact block -->
+        <div class="text-right space-y-1 text-sm text-slate-600 font-mono">
+          <div>Beijing, China</div>
+          <div>
+            <a href="https://www.mi.com" class="text-slate-700 hover:underline font-semibold">mi.com</a>
+          </div>
+          <div class="flex items-center gap-2 justify-end mt-3">
+            <span class="tag">HKEX: 1810</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tagline -->
+      <p class="mt-8 text-base leading-relaxed text-slate-700 max-w-3xl opacity-85">
+        中国著名天使投资人和企业家，从金山软件总裁到创办小米科技，以"互联网+硬件"的创新理念，将小米打造为全球顶级科技品牌，现已成为炙手可热的投资领袖和创新理念推动者。
+      </p>
+    </header>
+
+    <div class="px-12 py-12 space-y-12">
+
+      <!-- ── ABOUT ── -->
+      <section class="fade-up delay-1">
+        <p class="section-label mb-4">关于</p>
+        <p class="text-sm leading-7 text-slate-700 opacity-90">
+          雷军，1969年生于湖北仙桃，1987年以湖北省高考状元身份考入武汉大学计算机系。电子工程师出身，硅谷创业精神的践行者。先后担任金山软件总经理、董事长，见证了中国软件产业的早期发展。2010年创办小米科技，以互联网思维革新手机产业，推行"铁人三项"战略（手机+IoT+互联网服务），打造全球表现最佳的科技企业生态。被誉为"劳模企业家"和"互联网+硬件"的开创者。
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ── EXPERIENCE ── -->
+      <section class="fade-up delay-2">
+        <p class="section-label mb-6">职业经历</p>
+        <div class="space-y-8">
+
+          <div class="timeline-item">
+            <div class="flex items-baseline justify-between flex-wrap gap-2">
+              <h3 class="font-semibold text-slate-800 text-base">小米集团</h3>
+              <span class="font-mono text-xs text-slate-500">2010 — 至今</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-0.5 mb-3">创始人、董事长兼首席执行官</p>
+            <ul class="text-sm text-slate-700 opacity-85 space-y-2 list-none">
+              <li>— 创立全球首个"互联网+硬件"生态公司，定义新零售商业模式</li>
+              <li>— 推出小米手机、小米平板、小米手环等爆款产品，获得数百万粉丝</li>
+              <li>— 建立小米生态链系统，投资超100家创业公司，构建全方位IoT产业版图</li>
+              <li>— 2018年港交所IPO （融资约54亿美元），成为全球最大智能硬件平台之一</li>
+              <li>— 推行全球化战略，成为全球手机市场TOP 3制造商之一</li>
+              <li>— 推动小米造富神话，员工平均薪酬与福利在业界领先</li>
+            </ul>
+          </div>
+
+          <div class="timeline-item">
+            <div class="flex items-baseline justify-between flex-wrap gap-2">
+              <h3 class="font-semibold text-slate-800 text-base">金山软件</h3>
+              <span class="font-mono text-xs text-slate-500">1992 — 2010</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-0.5 mb-3">总经理、董事长</p>
+            <ul class="text-sm text-slate-700 opacity-85 space-y-2">
+              <li>— 加入金山开发部，从程序员做起，带领金山度过各个阶段困难</li>
+              <li>— 推出WPS等旗舰产品，与微软Office竞争，获得数千万用户</li>
+              <li>— 担任董事长期间完成金山上市，成为中国第一批科技上市公司</li>
+              <li>— 确立金山在杀毒、游戏等领域的市场地位</li>
+            </ul>
+          </div>
+
+          <div class="timeline-item">
+            <div class="flex items-baseline justify-between flex-wrap gap-2">
+              <h3 class="font-semibold text-slate-800 text-base">武汉大学 / 天使投资人</h3>
+              <span class="font-mono text-xs text-slate-500">1987 — 1992</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-0.5 mb-3">计算机系 / 创业阶段</p>
+            <ul class="text-sm text-slate-700 opacity-85 space-y-2">
+              <li>— 大学期间自学编程，参与多个软件开发项目</li>
+              <li>— 毕业后投身金山软件，成为中国最早的程序员创业者</li>
+              <li>— 后来成为知名天使投资人，投资了小米、顺为资本、YY语音等多家企业</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ── EDUCATION ── -->
+      <section class="fade-up delay-3">
+        <p class="section-label mb-6">教育背景</p>
+        <div class="space-y-5">
+
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h3 class="font-semibold text-slate-800 text-sm">武汉大学</h3>
+              <p class="text-xs text-slate-600 mt-0.5">计算机系本科</p>
+            </div>
+            <span class="font-mono text-xs text-slate-500 whitespace-nowrap">1987 — 1991</span>
+          </div>
+
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h3 class="font-semibold text-slate-800 text-sm">结业于硅谷</h3>
+              <p class="text-xs text-slate-600 mt-0.5">科技创业与投资学习</p>
+            </div>
+            <span class="font-mono text-xs text-slate-500 whitespace-nowrap">2000 — 2010</span>
+          </div>
+
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ── KEY ACHIEVEMENTS ── -->
+      <section class="fade-up delay-4">
+        <p class="section-label mb-6">核心成就</p>
+        <div class="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
+
+          <div class="stat-card">
+            <p class="font-mono text-2xl font-bold text-slate-800">¥2.3T</p>
+            <p class="text-xs text-slate-600 mt-2">小米集团市值巅峰</p>
+          </div>
+
+          <div class="stat-card">
+            <p class="font-mono text-2xl font-bold text-slate-800">100+</p>
+            <p class="text-xs text-slate-600 mt-2">小米生态链投资公司</p>
+          </div>
+
+          <div class="stat-card">
+            <p class="font-mono text-2xl font-bold text-slate-800">35 年</p>
+            <p class="text-xs text-slate-600 mt-2">互联网从业经验</p>
+          </div>
+
+          <div class="stat-card">
+            <p class="font-mono text-2xl font-bold text-slate-800">189+</p>
+            <p class="text-xs text-slate-600 mt-2">国家与地区市场覆盖</p>
+          </div>
+
+          <div class="stat-card">
+            <p class="font-mono text-2xl font-bold text-slate-800">2018</p>
+            <p class="text-xs text-slate-600 mt-2">港交所上市年份</p>
+          </div>
+
+          <div class="stat-card">
+            <p class="font-mono text-2xl font-bold text-slate-800">Top 3</p>
+            <p class="text-xs text-slate-600 mt-2">全球手机制造商排名</p>
+          </div>
+
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ── INVESTMENT & VENTURES ── -->
+      <section class="fade-up delay-5">
+        <p class="section-label mb-6">投资与创业实践</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <div class="p-4 bg-slate-50 rounded border border-slate-200">
+            <h4 class="font-semibold text-slate-800 text-sm mb-2">顺为资本</h4>
+            <p class="text-xs text-slate-600">与许达来、唐彰共同创办的早期风险投资基金，累计投资超500个项目，包括多家独角兽企业</p>
+          </div>
+
+          <div class="p-4 bg-slate-50 rounded border border-slate-200">
+            <h4 class="font-semibold text-slate-800 text-sm mb-2">小米生态链</h4>
+            <p class="text-xs text-slate-600">投资数百家初创企业，涵盖IoT、消费电子、智能家居等领域，形成协同生态</p>
+          </div>
+
+          <div class="p-4 bg-slate-50 rounded border border-slate-200">
+            <h4 class="font-semibold text-slate-800 text-sm mb-2">代表性投资案例</h4>
+            <p class="text-xs text-slate-600">YY直播、B站、快手、得到、创业开放平台等数十家高估值公司</p>
+          </div>
+
+          <div class="p-4 bg-slate-50 rounded border border-slate-200">
+            <h4 class="font-semibold text-slate-800 text-sm mb-2">商业理念</h4>
+            <p class="text-xs text-slate-600">"广泛投资、长期陪伴、帮助创业者成功"的投资哲学</p>
+          </div>
+
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ── SKILLS ── -->
+      <section class="fade-up delay-5">
+        <p class="section-label mb-4">核心能力</p>
+        <div class="flex flex-wrap gap-3">
+          <span class="tag">互联网战略</span>
+          <span class="tag">硬件生态</span>
+          <span class="tag">全球化运营</span>
+          <span class="tag">天使投资</span>
+          <span class="tag">品牌建设</span>
+          <span class="tag">供应链优化</span>
+          <span class="tag">团队管理</span>
+          <span class="tag">产品创新</span>
+          <span class="tag">商业模式设计</span>
+          <span class="tag">资本运作</span>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ── SOCIAL IMPACT ── -->
+      <section class="fade-up delay-6">
+        <p class="section-label mb-4">社会贡献</p>
+        <ul class="text-sm text-slate-700 opacity-85 space-y-2">
+          <li>— 创造数万个就业机会，小米全球员工超过30万人</li>
+          <li>— 推动中国科技制造业升级，创新工业设计理念</li>
+          <li>— 参与武汉大学校务建设，支持高等教育发展</li>
+          <li>— 通过投资推动数字经济创新，培育新一代创业者</li>
+          <li>— 积极报道与分享创业智慧，启发中国企业家精神</li>
+        </ul>
+      </section>
+
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer class="px-12 py-8 flex items-center justify-between flex-wrap gap-4" style="border-top: 2px solid #e2e8f0; background: #f8fafc;">
+      <span class="font-mono text-xs text-slate-600">© 2024 &nbsp;雷军 · 个人简历 · Created with Vision</span>
+      <span class="font-mono text-xs text-slate-400">HKEX: 1810 · Global Entrepreneur</span>
+    </footer>
+
+  </div>
+
+  <script>
+    // 3D Background Animation - Yoga/Exercise Theme
+    function initThreeJS() {
+      const canvas = document.getElementById('3d-background');
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000, 0);
+      camera.position.z = 5;
+
+      // Create geometric shapes representing exercise/movement
+      const geometry1 = new THREE.IcosahedronGeometry(1, 4);
+      const material1 = new THREE.MeshPhongMaterial({ 
+        color: 0x64748b, 
+        emissive: 0x374151,
+        wireframe: true 
+      });
+      const shape1 = new THREE.Mesh(geometry1, material1);
+      shape1.position.x = -3;
+      scene.add(shape1);
+
+      const geometry2 = new THREE.OctahedronGeometry(1.2, 2);
+      const material2 = new THREE.MeshPhongMaterial({ 
+        color: 0x94a3b8, 
+        emissive: 0x475569,
+        wireframe: false 
+      });
+      const shape2 = new THREE.Mesh(geometry2, material2);
+      shape2.position.x = 3;
+      shape2.position.y = 1;
+      scene.add(shape2);
+
+      const geometry3 = new THREE.TorusGeometry(1.5, 0.4, 8, 60);
+      const material3 = new THREE.MeshPhongMaterial({ 
+        color: 0xbfdbfe,
+        emissive: 0x0f172a,
+        wireframe: true 
+      });
+      const shape3 = new THREE.Mesh(geometry3, material3);
+      shape3.position.y = -1;
+      scene.add(shape3);
+
+      // Lighting
+      const light1 = new THREE.DirectionalLight(0xffffff, 0.6);
+      light1.position.set(5, 5, 5);
+      scene.add(light1);
+
+      const light2 = new THREE.PointLight(0x94a3b8, 0.4);
+      light2.position.set(-5, -5, 5);
+      scene.add(light2);
+
+      // Animation loop
+      const animate = () => {
+        requestAnimationFrame(animate);
+        shape1.rotation.x += 0.001;
+        shape1.rotation.y += 0.002;
+        
+        shape2.rotation.y += 0.0015;
+        shape2.rotation.z += 0.001;
+        
+        shape3.rotation.x += 0.0008;
+        shape3.rotation.y += 0.002;
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
+    // Initialize when document is loaded
+    document.addEventListener('DOMContentLoaded', initThreeJS);
+  </script>
+
+</body>
+</html>

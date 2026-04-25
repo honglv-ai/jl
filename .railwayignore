@@ -1,0 +1,14 @@
+.git
+.github
+.gitignore
+.env.example
+.env.local
+README.md
+QUICKSTART.md
+COMPLETION_SUMMARY.md
+FILE_MANIFEST.md
+DOCKER_DEPLOYMENT.md
+.DS_Store
+.vscode
+.idea
+*.md
