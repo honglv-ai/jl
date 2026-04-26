@@ -21,9 +21,9 @@ git push origin main
 
 # Railway CLI 安装检查
 if ! command -v railway >/dev/null 2>&1; then
-  echo "Railway CLI 未检测到，正在安装..."
+  echo "Railway CLI 未检测到，正在安装 @railway/cli..."
   if command -v npm >/dev/null 2>&1; then
-    npm install -g railway
+    npm install -g @railway/cli
   else
     echo "请先安装 npm，然后重试。"
     exit 1
@@ -32,7 +32,10 @@ fi
 
 # 登录 Railway
 echo "请在浏览器中完成 Railway 登录..."
-railway login
+railway login || {
+  echo "尝试使用 npx @railway/cli login..."
+  npx @railway/cli login
+}
 
 # 初始化或关联 Railway 项目
 if ! railway status >/dev/null 2>&1; then
