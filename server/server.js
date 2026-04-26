@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -16,6 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(process.cwd())));
 
 // Initialize database
 await initDatabase();
