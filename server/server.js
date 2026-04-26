@@ -15,12 +15,33 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
-app.use(cors());
+// 配置 CORS - 允许所有来源和必要的方法/头
+const corsOptions = {
+  origin: '*', // 允许所有来源
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: false,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(process.cwd())));
 
 // Initialize database
 await initDatabase();
+
+// 处理所有 OPTIONS 预检请求
+app.options('*', cors(corsOptions));
+
+// 全局错误处理 - 添加 CORS 头到所有响应
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  next();
+});
 
 // Middleware to verify JWT
 const authenticateToken = (req, res, next) => {
