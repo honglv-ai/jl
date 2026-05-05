@@ -1,305 +1,262 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>立志简历 | Resume Builder</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            ink: '#0a0f1e',
-            'blue-deep': '#0d2b6b',
-            'blue-mid': '#1a4dc4',
-            'blue-light': '#3b6ef0',
-            'blue-pale': '#dce8ff',
-            'blue-ghost': '#f0f5ff',
-            rule: '#c8d8f5',
-            muted: '#6b82b0',
-          },
-          fontFamily: {
-            serif: ['"Noto Serif SC"', 'serif'],
-            mono: ['"DM Mono"', 'monospace'],
-            display: ['"Playfair Display"', 'serif'],
-          },
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      }
-    }
-  </script>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      background-color: #f8faff;
-      color: #0a0f1e;
-    }
 
-    /* Page fade-in */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fade-up { animation: fadeUp .55s cubic-bezier(.22,.68,0,1.2) both; }
-    .delay-1 { animation-delay: .08s; }
-    .delay-2 { animation-delay: .16s; }
-    .delay-3 { animation-delay: .24s; }
-    .delay-4 { animation-delay: .32s; }
-    .delay-5 { animation-delay: .40s; }
-    .delay-6 { animation-delay: .48s; }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #0a0a0a;
+            font-family: 'Arial Black', sans-serif;
+            overflow: hidden;
+        }
 
-    /* Thin vertical rule for timeline */
-    .timeline-item { position: relative; padding-left: 1.5rem; }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: 0; top: .45rem;
-      width: 6px; height: 6px;
-      background: #1a4dc4;
-      border-radius: 50%;
-    }
-    .timeline-item::after {
-      content: '';
-      position: absolute;
-      left: 2.5px; top: 1.1rem;
-      width: 1px;
-      bottom: 0;
-      background: #c8d8f5;
-    }
-    .timeline-item:last-child::after { display: none; }
+        .glitch {
+            font-size: 120px;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            position: relative;
+            letter-spacing: 8px;
+            animation: shake 3s infinite;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
 
-    /* Skill tag */
-    .tag {
-      display: inline-block;
-      font-family: 'DM Mono', monospace;
-      font-size: .72rem;
-      letter-spacing: .04em;
-      padding: .2rem .65rem;
-      border-radius: 2px;
-      background: #dce8ff;
-      color: #1a4dc4;
-    }
+        .glitch:hover {
+            transform: scale(1.15);
+            color: #ff3333;
+            animation: shake-hard 0.5s infinite;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8),
+                         0 0 40px rgba(255, 0, 0, 0.5),
+                         0 0 80px rgba(255, 0, 0, 0.3);
+        }
 
-    /* Section label */
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: .65rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: #6b82b0;
-    }
+        .glitch.broken {
+            animation: break-apart 0.6s ease-out forwards;
+        }
 
-    /* Divider rule */
-    hr.rule { border-color: #c8d8f5; }
+        .glitch.rebuilding {
+            animation: rebuild 0.8s ease-out forwards;
+        }
 
-    /* Print */
-    @media print {
-      body { background: white; }
-      .no-print { display: none; }
-    }
-  </style>
+        .glitch::before,
+        .glitch::after {
+            content: 'FAKE NEWS';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            color: #ff00ff;
+            animation: glitch-1 2s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+        }
+
+        .glitch:hover::before {
+            color: #ff0000;
+            animation: glitch-1 0.3s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            color: #00ffff;
+            animation: glitch-2 3s infinite linear alternate-reverse;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+        }
+
+        .glitch:hover::after {
+            color: #ff6600;
+            animation: glitch-2 0.2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-1 {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-2 {
+            0% { transform: translate(0); }
+            20% { transform: translate(3px, -3px); }
+            40% { transform: translate(3px, 3px); }
+            60% { transform: translate(-3px, -3px); }
+            80% { transform: translate(-3px, 3px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes shake {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-5px, 0); }
+            94% { transform: translate(5px, 0); }
+            96% { transform: translate(-5px, 0); }
+            98% { transform: translate(5px, 0); }
+        }
+
+        @keyframes shake-hard {
+            0% { transform: scale(1.15) translate(0); }
+            25% { transform: scale(1.15) translate(-8px, 4px); }
+            50% { transform: scale(1.15) translate(8px, -4px); }
+            75% { transform: scale(1.15) translate(-4px, -8px); }
+            100% { transform: scale(1.15) translate(4px, 8px); }
+        }
+
+        @keyframes break-apart {
+            0% {
+                transform: scale(1.15) translate(0);
+                opacity: 1;
+                filter: blur(0);
+            }
+            50% {
+                transform: scale(1.3) translate(20px, -10px);
+                opacity: 0.8;
+                filter: blur(2px);
+            }
+            100% {
+                transform: scale(0.5) translate(100px, 50px) rotate(15deg);
+                opacity: 0;
+                filter: blur(10px);
+            }
+        }
+
+        @keyframes rebuild {
+            0% {
+                transform: scale(0.5) translate(-100px, -50px) rotate(-15deg);
+                opacity: 0;
+                filter: blur(10px);
+            }
+            50% {
+                transform: scale(1.2) translate(-10px, 5px);
+                opacity: 0.7;
+                filter: blur(3px);
+            }
+            100% {
+                transform: scale(1) translate(0) rotate(0);
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .noise {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.08"/></svg>');
+            animation: noise 0.5s infinite;
+            pointer-events: none;
+            z-index: 9;
+        }
+
+        @keyframes noise {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -5%); }
+            20% { transform: translate(-10%, 5%); }
+            30% { transform: translate(5%, -10%); }
+            40% { transform: translate(-5%, 15%); }
+            50% { transform: translate(-10%, 5%); }
+            60% { transform: translate(15%, 0); }
+            70% { transform: translate(0, 10%); }
+            80% { transform: translate(-15%, 0); }
+            90% { transform: translate(10%, 5%); }
+            100% { transform: translate(5%, 0); }
+        }
+
+        .counter {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            color: #ff3333;
+            font-size: 24px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            z-index: 20;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
+        }
+
+        .counter.pop {
+            animation: pop 0.3s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); color: #fff; }
+            100% { transform: scale(1); }
+        }
+    </style>
 </head>
-<body class="font-serif min-h-screen py-10 px-4">
+<body>
+    <div class="glitch" id="glitch">FAKE NEWS</div>
+    <div class="counter" id="counter">CLICKS: 0</div>
+    <div class="scanline"></div>
+    <div class="noise"></div>
 
-  <!-- ── PAPER ─────────────────────────────────────────── -->
-  <div class="max-w-3xl mx-auto bg-white shadow-[0_2px_40px_rgba(13,43,107,.08)] rounded-sm overflow-hidden">
+    <script>
+        const glitch = document.getElementById('glitch');
+        const counter = document.getElementById('counter');
+        let clickCount = 0;
+        let isAnimating = false;
 
-    <!-- ── HEADER ── -->
-    <header class="px-12 pt-12 pb-10 fade-up" style="border-bottom: 1.5px solid #c8d8f5;">
-      <div class="flex items-end justify-between gap-6 flex-wrap">
-        <!-- Name block -->
-        <div>
-          <p class="section-label mb-2">Executive Profile</p>
-          <h1 class="font-display text-5xl font-bold text-blue-deep leading-none tracking-tight">
-            刘强东
-          </h1>
-          <p class="mt-2 text-muted text-sm font-mono tracking-wide">Richard Liu &nbsp;·&nbsp; 京东集团创始人</p>
-        </div>
+        glitch.addEventListener('click', function() {
+            if (isAnimating) return;
+            isAnimating = true;
 
-        <!-- Contact block -->
-        <div class="text-right space-y-1 text-sm text-muted font-mono">
-          <div>Beijing, China</div>
-          <div>
-            <a href="https://jd.com" class="text-blue-light hover:underline">jd.com</a>
-          </div>
-          <div class="flex items-center gap-2 justify-end mt-2">
-            <span class="tag">NYSE: JD</span>
-          </div>
-        </div>
-      </div>
+            // 计数器+1
+            clickCount++;
+            counter.textContent = `CLICKS: ${clickCount}`;
+            counter.classList.remove('pop');
+            void counter.offsetWidth; // 强制重排触发动画
+            counter.classList.add('pop');
 
-      <!-- Tagline -->
-      <p class="mt-7 text-base leading-relaxed text-ink max-w-2xl opacity-75">
-        从宿迁农村走出的第一代创业者，以技术驱动零售变革，将京东打造为中国最大的自营电商平台与物流基础设施运营商之一。
-      </p>
-    </header>
+            // 炸开
+            this.classList.remove('rebuilding');
+            this.classList.add('broken');
 
-    <div class="px-12 py-10 space-y-10">
+            // 重组
+            setTimeout(() => {
+                this.classList.remove('broken');
+                this.classList.add('rebuilding');
+            }, 600);
 
-      <!-- ── ABOUT ── -->
-      <section class="fade-up delay-1">
-        <p class="section-label mb-4">关于</p>
-        <p class="text-sm leading-7 text-ink opacity-80">
-          刘强东，1974 年生于江苏宿迁，1996 年以全县状元身份考入中国人民大学社会学系，后取得 EMBA 学位。1998 年创办京东，历经转型、SARS 危机与多轮融资，将一家柜台零售店升级为 A/B 股两地上市的全球科技商业集团。其管理风格以执行力强、对供应链与物流的极致把控著称。
-        </p>
-      </section>
-
-      <hr class="rule" />
-
-      <!-- ── EXPERIENCE ── -->
-      <section class="fade-up delay-2">
-        <p class="section-label mb-6">职业经历</p>
-        <div class="space-y-7">
-
-          <div class="timeline-item">
-            <div class="flex items-baseline justify-between flex-wrap gap-2">
-              <h3 class="font-semibold text-blue-deep text-base">京东集团（JD.com）</h3>
-              <span class="font-mono text-xs text-muted">1998 — 至今</span>
-            </div>
-            <p class="text-xs text-muted mt-0.5 mb-2">创始人 &amp; 董事局主席</p>
-            <ul class="text-sm text-ink opacity-75 space-y-1.5 list-none">
-              <li>— 从零搭建自营电商体系，建立覆盖全国的仓储配送网络，末端配送时效达行业最优</li>
-              <li>— 主导 2014 年在纳斯达克上市（IPO 规模约 18 亿美元），成为当时中国最大科技股 IPO 之一</li>
-              <li>— 推动京东物流、京东健康、京东工业等子集团独立上市，构建多元生态</li>
-              <li>— 2023 年启动回归一线战略，亲自主抓低价策略与供应链效率提升</li>
-            </ul>
-          </div>
-
-          <div class="timeline-item">
-            <div class="flex items-baseline justify-between flex-wrap gap-2">
-              <h3 class="font-semibold text-blue-deep text-base">京东之家（实体零售）</h3>
-              <span class="font-mono text-xs text-muted">1998 — 2003</span>
-            </div>
-            <p class="text-xs text-muted mt-0.5 mb-2">创始人 &amp; 总经理</p>
-            <ul class="text-sm text-ink opacity-75 space-y-1.5">
-              <li>— 在中关村创办光磁产品零售柜台，3 年内扩张至多家门店</li>
-              <li>— SARS 疫情倒逼业务线上化，2003 年完成电商转型</li>
-            </ul>
-          </div>
-
-          <div class="timeline-item">
-            <div class="flex items-baseline justify-between flex-wrap gap-2">
-              <h3 class="font-semibold text-blue-deep text-base">中国人民大学 / 宿迁希望工程</h3>
-              <span class="font-mono text-xs text-muted">1996 — 1998</span>
-            </div>
-            <p class="text-xs text-muted mt-0.5 mb-2">大学就读 &amp; 创业初期探索</p>
-            <ul class="text-sm text-ink opacity-75 space-y-1.5">
-              <li>— 在校期间自学编程，承接餐饮、鲜花配送等小型创业项目</li>
-              <li>— 毕业后短暂任职于日资企业，随后决定自主创业</li>
-            </ul>
-          </div>
-
-        </div>
-      </section>
-
-      <hr class="rule" />
-
-      <!-- ── EDUCATION ── -->
-      <section class="fade-up delay-3">
-        <p class="section-label mb-6">教育背景</p>
-        <div class="space-y-5">
-
-          <div class="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h3 class="font-semibold text-blue-deep text-sm">中国人民大学</h3>
-              <p class="text-xs text-muted mt-0.5">社会学学士</p>
-            </div>
-            <span class="font-mono text-xs text-muted whitespace-nowrap">1996 — 2000</span>
-          </div>
-
-          <div class="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h3 class="font-semibold text-blue-deep text-sm">中国人民大学</h3>
-              <p class="text-xs text-muted mt-0.5">EMBA</p>
-            </div>
-            <span class="font-mono text-xs text-muted whitespace-nowrap">2002 — 2004</span>
-          </div>
-
-        </div>
-      </section>
-
-      <hr class="rule" />
-
-      <!-- ── KEY ACHIEVEMENTS ── -->
-      <section class="fade-up delay-4">
-        <p class="section-label mb-6">核心成就</p>
-        <div class="grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
-
-          <div class="border-l-2 border-blue-light pl-4">
-            <p class="font-mono text-xl font-medium text-blue-deep">¥1.08T</p>
-            <p class="text-xs text-muted mt-1">2023 年度营收（人民币）</p>
-          </div>
-
-          <div class="border-l-2 border-blue-light pl-4">
-            <p class="font-mono text-xl font-medium text-blue-deep">580K+</p>
-            <p class="text-xs text-muted mt-1">京东物流自有配送员工</p>
-          </div>
-
-          <div class="border-l-2 border-blue-light pl-4">
-            <p class="font-mono text-xl font-medium text-blue-deep">40+</p>
-            <p class="text-xs text-muted mt-1">覆盖省级仓储枢纽数量</p>
-          </div>
-
-          <div class="border-l-2 border-blue-light pl-4">
-            <p class="font-mono text-xl font-medium text-blue-deep">4</p>
-            <p class="text-xs text-muted mt-1">独立上市子集团</p>
-          </div>
-
-          <div class="border-l-2 border-blue-light pl-4">
-            <p class="font-mono text-xl font-medium text-blue-deep">Top 3</p>
-            <p class="text-xs text-muted mt-1">中国电商平台市场份额</p>
-          </div>
-
-          <div class="border-l-2 border-blue-light pl-4">
-            <p class="font-mono text-xl font-medium text-blue-deep">2014</p>
-            <p class="text-xs text-muted mt-1">纳斯达克上市年份</p>
-          </div>
-
-        </div>
-      </section>
-
-      <hr class="rule" />
-
-      <!-- ── SKILLS ── -->
-      <section class="fade-up delay-5">
-        <p class="section-label mb-4">核心能力</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="tag">供应链管理</span>
-          <span class="tag">物流基础设施</span>
-          <span class="tag">电商平台运营</span>
-          <span class="tag">资本市场</span>
-          <span class="tag">战略并购</span>
-          <span class="tag">组织扩张</span>
-          <span class="tag">技术驱动零售</span>
-          <span class="tag">品牌建设</span>
-          <span class="tag">政企关系</span>
-        </div>
-      </section>
-
-      <hr class="rule" />
-
-      <!-- ── SOCIAL / PHILANTHROPY ── -->
-      <section class="fade-up delay-6">
-        <p class="section-label mb-4">社会影响</p>
-        <ul class="text-sm text-ink opacity-75 space-y-2">
-          <li>— 在宿迁故乡累计捐建希望小学及基础设施，持续推进乡村振兴项目</li>
-          <li>— 京东公益平台年均动员数千万用户参与爱心捐赠</li>
-          <li>— 全国政协委员，积极参与营商环境、乡村振兴等议题</li>
-        </ul>
-      </section>
-
-    </div>
-
-    <!-- ── FOOTER ── -->
-    <footer class="px-12 py-6 flex items-center justify-between" style="border-top: 1.5px solid #c8d8f5;">
-      <span class="font-mono text-xs text-muted">© 2024 &nbsp;刘强东 · 个人简历</span>
-      <span class="font-mono text-xs" style="color:#c8d8f5;">JD / NASDAQ · HKEx</span>
-    </footer>
-
-  </div>
-
+            // 恢复正常
+            setTimeout(() => {
+                this.classList.remove('rebuilding');
+                isAnimating = false;
+            }, 1400);
+        });
+    </script>
 </body>
 </html>
