@@ -1,387 +1,345 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>有人说，系统框架下，洪磊判了，番茄就完了！</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* --- 全局样式与重置 --- */
+        :root {
+            --primary-color: #FF6B6B; /* 温暖珊瑚红 */
+            --secondary-color: #4ECDC4; /* 清新薄荷绿 */
+            --dark-text: #2D3436;
+            --light-text: #636E72;
+            --bg-color: #F9F9F9;
+            --card-bg: #FFFFFF;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #0a0a0a;
-            font-family: 'Arial Black', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* --- 头部英雄区 --- */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #FF8E53 100%);
+            color: white;
+            padding: 80px 20px 60px;
+            text-align: center;
+            position: relative;
             overflow: hidden;
         }
 
-        @keyframes shake-hard {
-            0% { transform: scale(1.15) translate(0); }
-            25% { transform: scale(1.15) translate(-8px, 4px); }
-            50% { transform: scale(1.15) translate(8px, -4px); }
-            75% { transform: scale(1.15) translate(-4px, -8px); }
-            100% { transform: scale(1.15) translate(4px, 8px); }
-        }
-
-        @keyframes break-apart {
-            0% {
-                transform: scale(1.15) translate(0);
-                opacity: 1;
-                filter: blur(0);
-            }
-            50% {
-                transform: scale(1.3) translate(20px, -10px);
-                opacity: 0.8;
-                filter: blur(2px);
-            }
-            100% {
-                transform: scale(0.5) translate(100px, 50px) rotate(15deg);
-                opacity: 0;
-                filter: blur(10px);
-            }
-        }
-
-        @keyframes rebuild {
-            0% {
-                transform: scale(0.5) translate(-100px, -50px) rotate(-15deg);
-                opacity: 0;
-                filter: blur(10px);
-            }
-            50% {
-                transform: scale(1.2) translate(-10px, 5px);
-                opacity: 0.7;
-                filter: blur(3px);
-            }
-            100% {
-                transform: scale(1) translate(0) rotate(0);
-                opacity: 1;
-                filter: blur(0);
-            }
-        }
-
-        .scanline {
-            position: fixed;
-            top: 0;
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                transparent 50%,
-                rgba(0, 0, 0, 0.1) 50%
-            );
-            background-size: 100% 4px;
-            pointer-events: none;
+            height: 50px;
+            background: var(--bg-color);
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+
+        .hero h1 { font-size: 2.5rem; margin-bottom: 15px; font-weight: 800; }
+        .hero p { font-size: 1.1rem; opacity: 0.95; max-width: 600px; margin: 0 auto; }
+
+        /* --- 容器 --- */
+        .container {
+            max-width: 800px;
+            margin: -30px auto 40px;
+            padding: 0 20px;
+            position: relative;
             z-index: 10;
         }
 
-        .noise {
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.08"/></svg>');
-            animation: noise 0.5s infinite;
-            pointer-events: none;
-            z-index: 9;
+        /* --- 进度卡片 --- */
+        .progress-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
         }
 
-        @keyframes noise {
-            0% { transform: translate(0, 0); }
-            10% { transform: translate(-5%, -5%); }
-            20% { transform: translate(-10%, 5%); }
-            30% { transform: translate(5%, -10%); }
-            40% { transform: translate(-5%, 15%); }
-            50% { transform: translate(-10%, 5%); }
-            60% { transform: translate(15%, 0); }
-            70% { transform: translate(0, 10%); }
-            80% { transform: translate(-15%, 0); }
-            90% { transform: translate(10%, 5%); }
-            100% { transform: translate(5%, 0); }
-        }
-
-        .counter {
-            position: fixed;
-            top: 30px;
-            right: 40px;
-            color: #ff3333;
-            font-size: 24px;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            z-index: 20;
-            text-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
-        }
-
-        .counter.pop {
-            animation: pop 0.3s ease-out;
-        }
-
-        .donate-link {
-            position: fixed;
-            bottom: 30px;
-            right: 40px;
-            padding: 14px 24px;
-            background: linear-gradient(135deg, #ff3366, #ff9933);
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 999px;
-            box-shadow: 0 10px 30px rgba(255, 102, 51, 0.35);
-            z-index: 20;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .donate-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 36px rgba(255, 102, 51, 0.5);
-        }
-
-        /* Alipay modal */
-        .donate-modal {
-            position: fixed;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.6);
-            z-index: 30;
-        }
-
-        .donate-modal.show {
+        .stats {
             display: flex;
-        }
-
-        .donate-card {
-            background: #0f0f0f;
-            padding: 22px;
-            border-radius: 12px;
-            color: #fff;
-            min-width: 300px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .donate-card h3 {
-            margin-bottom: 12px;
-            font-size: 20px;
-        }
-
-        .donate-account {
-            font-family: 'Courier New', monospace;
-            background: rgba(255,255,255,0.03);
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            word-break: break-all;
-        }
-
-        .donate-actions {
-            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
             gap: 10px;
-            justify-content: center;
         }
 
-        .btn {
-            padding: 10px 14px;
-            border-radius: 8px;
+        .stat-item h3 { font-size: 1.8rem; color: var(--primary-color); }
+        .stat-item span { font-size: 0.85rem; color: var(--light-text); }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 12px;
+            background: #EEE;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #FF8E53);
+            border-radius: 10px;
+            width: 68%; /* 动态宽度 */
+            transition: width 1s ease-out;
+        }
+
+        /* --- 捐款操作区 --- */
+        .donate-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .amount-btn {
+            padding: 15px 0;
+            border: 2px solid #EEE;
+            border-radius: 10px;
+            background: white;
+            font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            border: none;
+            transition: all 0.2s;
+            color: var(--dark-text);
         }
 
-        .btn.primary { background: linear-gradient(90deg,#ff3366,#ff9933); color: #fff; }
-        .btn.ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.08); }
+        .amount-btn:hover, .amount-btn.active {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(255, 107, 107, 0.05);
+        }
 
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); color: #fff; }
-            100% { transform: scale(1); }
+        .custom-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #EEE;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .custom-input:focus { border-color: var(--primary-color); }
+
+        .donate-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        /* --- 项目故事与反馈 --- */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .content-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-card p { color: var(--light-text); margin-bottom: 15px; }
+
+        .feedback-list { list-style: none; }
+        .feedback-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #F0F0F0;
+            display: flex;
+            gap: 15px;
+        }
+        .feedback-item:last-child { border-bottom: none; }
+        .avatar {
+            width: 40px; height: 40px;
+            background: #EEE; border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .feedback-meta { font-size: 0.8rem; color: #999; margin-top: 5px; }
+
+        /* --- 页脚 --- */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--light-text);
+            font-size: 0.85rem;
+        }
+
+        /* --- 响应式 --- */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.8rem; }
+            .amount-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats { justify-content: center; text-align: center; }
+            .stat-item { flex: 1 1 45%; }
         }
     </style>
 </head>
 <body>
-    <div class="glitch" id="glitch">FAKE NEWS</div>
-    <a class="donate-link" href="#" id="donateBtn">捐助我们</a>
-    <div class="counter" id="counter">CLICKS: 0</div>
-    <div class="scanline"></div>
-    <div class="noise"></div>
 
-    <div class="donate-modal" id="donateModal" aria-hidden="true">
-        <div class="donate-card" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
-            <h3 id="donateTitle">捐助（支付宝）</h3>
-            <div class="donate-account" id="donateAccount">19565150453</div>
-            <div style="font-size:13px;color:#ccc;margin-bottom:10px">可在支付宝中粘贴账号或扫描对应二维码（若有）。</div>
-            <img id="donateQr" alt="支付宝二维码" style="width:220px;height:220px;border-radius:8px;margin:8px auto;display:block;background:#fff;padding:8px;" src="" />
-            <div style="font-size:12px;color:#bbb;margin-bottom:8px">长按或下载二维码在支付宝中打开进行支付。</div>
-            <div class="donate-actions">
-                <button class="btn primary" id="copyBtn">复制账号</button>
-                <a class="btn ghost" id="downloadQr" href="#" download="alipay_qr.png">下载二维码</a>
-                <button class="btn ghost" id="openAlipayBtn">打开支付宝</button>
-                <button class="btn ghost" id="closeDonateBtn">关闭</button>
+    <!-- 头部 -->
+    <header class="hero">
+        <h1>📚 点亮希望阅读计划</h1>
+        <p>为偏远山区的孩子们筹集 1,000 个图书角，让每一双渴望知识的眼睛都能被看见。</p>
+    </header>
+
+    <div class="container">
+        <!-- 进度卡片 -->
+        <section class="progress-card">
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>¥68,420</h3>
+                    <span>已筹金额</span>
+                </div>
+                <div class="stat-item">
+                    <h3>68%</h3>
+                    <span>完成进度</span>
+                </div>
+                <div class="stat-item">
+                    <h3>1,204</h3>
+                    <span>爱心人次</span>
+                </div>
+                <div class="stat-item">
+                    <h3>12</h3>
+                    <span>剩余天数</span>
+                </div>
             </div>
-        </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </section>
+
+        <!-- 捐款区 -->
+        <section class="donate-section">
+            <h2 style="margin-bottom: 20px; font-size: 1.3rem;">选择您的爱心金额</h2>
+            <div class="amount-grid">
+                <button class="amount-btn" onclick="selectAmount(this, 30)">¥30<br><small>1套绘本</small></button>
+                <button class="amount-btn active" onclick="selectAmount(this, 100)">¥100<br><small>1个书包</small></button>
+                <button class="amount-btn" onclick="selectAmount(this, 300)">¥300<br><small>1个书架</small></button>
+                <button class="amount-btn" onclick="selectAmount(this, 500)">¥500<br><small>10套文具</small></button>
+                <button class="amount-btn" onclick="selectAmount(this, 1000)">¥1000<br><small>1个图书角</small></button>
+                <button class="amount-btn" onclick="selectAmount(this, 0)">自定义<br><small>任意金额</small></button>
+            </div>
+            <input type="number" class="custom-input" id="customAmount" placeholder="输入自定义金额 (元)" style="display:none;">
+            <button class="donate-btn" onclick="handleDonate()">立即捐款 ❤️</button>
+        </section>
+
+        <!-- 项目故事 -->
+        <section class="content-card">
+            <h2>🌱 关于这个项目</h2>
+            <p>在云南、贵州的偏远山区，许多孩子除了课本，几乎没有课外读物。我们致力于通过建立标准化图书角，为孩子们打开通往世界的窗户。</p>
+            <p>每一笔捐款都将用于：购买适龄优质图书、配置环保书架、以及培训当地阅读推广志愿者。我们承诺：<strong>100% 善款用于项目执行，行政成本由基金会专项补贴。</strong></p>
+        </section>
+
+        <!-- 爱心反馈 -->
+        <section class="content-card">
+            <h2>💌 爱心传递</h2>
+            <ul class="feedback-list">
+                <li class="feedback-item">
+                    <div class="avatar"></div>
+                    <div>
+                        <div><strong>匿名爱心人士</strong> 捐赠了 <span style="color:var(--primary-color)">¥200</span></div>
+                        <div class="feedback-meta">2小时前 · 愿孩子们眼里有光</div>
+                    </div>
+                </li>
+                <li class="feedback-item">
+                    <div class="avatar"></div>
+                    <div>
+                        <div><strong>李同学</strong> 捐赠了 <span style="color:var(--primary-color)">¥50</span></div>
+                        <div class="feedback-meta">5小时前 · 虽然不多，但希望能帮到一个小朋友</div>
+                    </div>
+                </li>
+                <li class="feedback-item">
+                    <div class="avatar"></div>
+                    <div>
+                        <div><strong>王*华</strong> 捐赠了 <span style="color:var(--primary-color)">¥1000</span></div>
+                        <div class="feedback-meta">1天前 · 支持乡村教育，你们辛苦了！</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
     </div>
 
+    <footer>
+        <p>© 2024 希望之光公益基金会 | <a href="#" style="color:var(--light-text)">项目透明报告</a> | <a href="#" style="color:var(--light-text)">联系我们</a></p>
+        <p style="margin-top:8px; font-size:0.75rem;">* 本页面仅为前端演示，实际捐款请跳转至官方认证渠道</p>
+    </footer>
+
     <script>
-        const glitch = document.getElementById('glitch');
-        const counter = document.getElementById('counter');
-        let clickCount = 0;
-        let isAnimating = false;
+        let currentAmount = 100;
 
-        glitch.addEventListener('click', function() {
-            if (isAnimating) return;
-            isAnimating = true;
+        function selectAmount(btn, amount) {
+            // 移除所有 active
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const customInput = document.getElementById('customAmount');
+            if (amount === 0) {
+                customInput.style.display = 'block';
+                customInput.focus();
+                currentAmount = 0;
+            } else {
+                customInput.style.display = 'none';
+                currentAmount = amount;
+            }
+        }
 
-            // 计数器+1
-            clickCount++;
-            counter.textContent = `CLICKS: ${clickCount}`;
-            counter.classList.remove('pop');
-            void counter.offsetWidth; // 强制重排触发动画
-            counter.classList.add('pop');
+        function handleDonate() {
+            const customVal = document.getElementById('customAmount').value;
+            const finalAmount = (currentAmount === 0) ? parseInt(customVal) : currentAmount;
 
-            // 炸开
-            this.classList.remove('rebuilding');
-            this.classList.add('broken');
+            if (!finalAmount || finalAmount <= 0) {
+                alert('请输入有效的捐款金额');
+                return;
+            }
 
-            // 重组
-            setTimeout(() => {
-                this.classList.remove('broken');
-                this.classList.add('rebuilding');
-            }, 600);
+            // 模拟捐款成功
+            alert(`感谢您的爱心！\n您选择捐赠：¥${finalAmount}\n\n（演示模式：实际请对接支付接口）`);
+            
+            // 这里可以接入微信支付/支付宝的 API 跳转逻辑
+        }
 
-            // 恢复正常
-            setTimeout(() => {
-                this.classList.remove('rebuilding');
-                isAnimating = false;
-            }, 1400);
-        });
-
-            // Alipay donate modal logic
-            const donateBtn = document.getElementById('donateBtn');
-            const donateModal = document.getElementById('donateModal');
-            const donateAccount = document.getElementById('donateAccount');
-            const copyBtn = document.getElementById('copyBtn');
-            const openAlipayBtn = document.getElementById('openAlipayBtn');
-            const closeDonateBtn = document.getElementById('closeDonateBtn');
-
-            let ALIPAY_ACCOUNT = '19565150453';
-            let ALIPAY_LINK = '';
-
-            const donateQr = document.getElementById('donateQr');
-            const downloadQr = document.getElementById('downloadQr');
-
-            // 从 donate.json 同步配置（用于与网站保持一致）
-            fetch('donate.json', { cache: 'no-cache' })
-                .then(r => r.json())
-                .then(cfg => {
-                    if (cfg.account) ALIPAY_ACCOUNT = cfg.account;
-                    if (cfg.link) ALIPAY_LINK = cfg.link;
-                })
-                .catch(() => {});
-
-            donateBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                donateAccount.textContent = ALIPAY_ACCOUNT;
-                // generate QR image locally (no external requests)
-                const tempDiv = document.createElement('div');
-                tempDiv.style.position = 'fixed';
-                tempDiv.style.left = '-9999px';
-                document.body.appendChild(tempDiv);
-                const qrPayload = ALIPAY_LINK || ALIPAY_ACCOUNT;
-                const qrcode = new QRCode(tempDiv, { text: qrPayload, width: 400, height: 400, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
-                // allow render then extract data URL
-                setTimeout(() => {
-                    const img = tempDiv.querySelector('img');
-                    const canvas = tempDiv.querySelector('canvas');
-                    let dataUrl = '';
-                    if (img && img.src) dataUrl = img.src;
-                    else if (canvas) dataUrl = canvas.toDataURL('image/png');
-                    else {
-                        // fallback: create simple SVG with account text (not a QR)
-                        const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><rect width='100%' height='100%' fill='#fff'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='20' fill='#000'>${qrPayload}</text></svg>`;
-                        dataUrl = 'data:image/svg+xml;base64,' + btoa(svg);
-                    }
-                    donateQr.src = dataUrl;
-                    downloadQr.href = dataUrl;
-                    document.body.removeChild(tempDiv);
-                }, 60);
-                donateModal.classList.add('show');
-                donateModal.setAttribute('aria-hidden','false');
-            });
-
-            closeDonateBtn.addEventListener('click', () => {
-                donateModal.classList.remove('show');
-                donateModal.setAttribute('aria-hidden','true');
-            });
-
-            copyBtn.addEventListener('click', async () => {
-                try {
-                    await navigator.clipboard.writeText(ALIPAY_ACCOUNT);
-                    copyBtn.textContent = '已复制';
-                    setTimeout(() => copyBtn.textContent = '复制账号', 2000);
-                } catch (err) {
-                    alert('复制失败，请手动复制账号：' + ALIPAY_ACCOUNT);
-                }
-            });
-
-            openAlipayBtn.addEventListener('click', () => {
-                // 如果配置了可跳转的支付宝链接，则直接打开；否则尝试打开支付宝 App URI 作为兜底
-                if (ALIPAY_LINK) {
-                    window.location.href = ALIPAY_LINK;
-                    return;
-                }
-                const alipayUri = 'alipay://platformapi/startapp';
-                window.location.href = alipayUri;
-                setTimeout(() => {
-                    alert('如果未打开支付宝，请在支付宝中手动转账至账号：' + ALIPAY_ACCOUNT);
-                }, 1200);
-            });
-
-            /* Embedded qrcode.js (MIT) - full library inlined to generate scannable QR codes locally */
-            /* Begin qrcode.js */
-
-// qrcode.js (inlined)
-// Source: https://github.com/davidshimjs/qrcodejs (MIT)
-(function(){
-/* Contents of qrcode.js start */
-/*
- * @fileoverview
- * - Using the 'QRCode for Javascript library'
- * - Fixed dataset of 'QRCode for Javascript library' for support full-spec.
- * - this library has no dependencies.
- * 
- * @author davidshimjs
- */
-var QRCode;(function(){
-// --- start of library ---
-/*
- * QRCode for JavaScript
- *
- * Copyright (c) 2009 Kazuhiko Arase
- *
- * URL: http://www.d-project.com/
- *
- * Licensed under the MIT license:
- *   http://www.opensource.org/licenses/mit-license.php
- *
- */
-function QR8bitByte(data){this.mode=QRMode.MODE_8BIT_BYTE;this.data=data;this.parsedData=[];for(var i=0,l=this.data.length;i<l;i++){var byteArray=[];var code=this.data.charCodeAt(i);if(code>0x10000){byteArray[0]=0xF0|((code&0x1C0000)>>>18);byteArray[1]=0x80|((code&0x3F000)>>>12);byteArray[2]=0x80|((code&0xFC0)>>>6);byteArray[3]=0x80|(code&0x3F);}else if(code>0x800){byteArray[0]=0xE0|((code&0xF000)>>>12);byteArray[1]=0x80|((code&0xFC0)>>>6);byteArray[2]=0x80|(code&0x3F);}else if(code>0x80){byteArray[0]=0xC0|((code&0x7C0)>>>6);byteArray[1]=0x80|(code&0x3F);}else{byteArray[0]=code;}this.parsedData.push(byteArray);}this.parsedData=Array.prototype.concat.apply([],this.parsedData);if(this.parsedData.length!=this.data.length){this.parsedData.unshift(191);this.parsedData.unshift(187);this.parsedData.unshift(239);}}QR8bitByte.prototype={getLength:function(buffer){return this.parsedData.length;},write:function(buffer){for(var i=0,l=this.parsedData.length;i<l;i++){buffer.put(this.parsedData[i],8);}}};
-function QRCodeModel(typeNumber,errorCorrectLevel){this.typeNumber=typeNumber;this.errorCorrectLevel=errorCorrectLevel;this.modules=null;this.moduleCount=0;this.dataCache=null;this.dataList=[];}QRCodeModel.prototype={addData:function(data){var newData=new QR8bitByte(data);this.dataList.push(newData);this.dataCache=null;},isDark:function(row,col){if(row<0||this.moduleCount<=row||col<0||this.moduleCount<=col){throw new Error(row+","+col);}return this.modules[row][col];},getModuleCount:function(){return this.moduleCount;},make:function(){this.makeImpl(false,this.getBestMaskPattern());},makeImpl:function(test,maskPattern){this.moduleCount=this.typeNumber*4+17;this.modules=new Array(this.moduleCount);for(var row=0;row<this.moduleCount;row++){this.modules[row]=new Array(this.moduleCount);for(var col=0;col<this.moduleCount;col++){this.modules[row][col]=null;}}this.setupPositionProbePattern(0,0);this.setupPositionProbePattern(this.moduleCount-7,0);this.setupPositionProbePattern(0,this.moduleCount-7);this.setupPositionAdjustPattern();this.setupTimingPattern();this.setupTypeInfo(test,maskPattern);if(this.typeNumber>=7){this.setupTypeNumber(test);}if(this.dataCache==null){this.dataCache=QRCodeModel.createData(this.typeNumber,this.errorCorrectLevel,this.dataList);}this.mapData(this.dataCache,maskPattern);},setupPositionProbePattern:function(row,col){for(var r=-1;r<=7;r++){if(row+r<=-1||this.moduleCount<=row+r)continue;for(var c=-1;c<=7;c++){if(col+c<=-1||this.moduleCount<=col+c)continue;if((0<=r&&r<=6&&(c==0||c==6))||(0<=c&&c<=6&&(r==0||r==6))||(2<=r&&r<=4&&2<=c&&c<=4)){this.modules[row+r][col+c]=true;}else{this.modules[row+r][col+c]=false;}}}},getBestMaskPattern:function(){var minLostPoint=0;var pattern=0;for(var i=0;i<8;i++){this.makeImpl(true,i);var lostPoint=QRUtil.getLostPoint(this);if(i==0||minLostPoint>lostPoint){minLostPoint=lostPoint;pattern=i;}}return pattern;},createMovieClip:function(target_mc,instance_name,depth){var qr_mc=target_mc.createEmptyMovieClip(instance_name,depth);var cs=1;this.make();for(var row=0;row<this.modules.length;row++){var y=row*cs;for(var col=0;col<this.modules[row].length;col++){var x=col*cs;var dark=this.modules[row][col];if(dark){qr_mc.beginFill(0,100);qr_mc.moveTo(x,y);qr_mc.lineTo(x+cs,y);qr_mc.lineTo(x+cs,y+cs);qr_mc.lineTo(x,y+cs);qr_mc.endFill();}}}return qr_mc;},setupTimingPattern:function(){for(var r=8;r<this.moduleCount-8;r++){if(this.modules[r][6]!=null){continue;}this.modules[r][6]=(r%2==0);}for(var c=8;c<this.moduleCount-8;c++){if(this.modules[6][c]!=null){continue;}this.modules[6][c]=(c%2==0);}},setupPositionAdjustPattern:function(){var pos=QRUtil.getPatternPosition(this.typeNumber);for(var i=0;i<pos.length;i++){for(var j=0;j<pos.length;j++){var row=pos[i];var col=pos[j];if(this.modules[row][col]!=null){continue;}for(var r=-2;r<=2;r++){for(var c=-2;c<=2;c++){if(r==-2||r==2||c==-2||c==2||(r==0&&c==0)){this.modules[row+r][col+c]=true;}else{this.modules[row+r][col+c]=false;}}}}}},setupTypeNumber:function(test){var bits=QRUtil.getBCHTypeNumber(this.typeNumber);for(var i=0;i<18;i++){var mod=(!test&&((bits>>i)&1)==1);this.modules[Math.floor(i/3)][i%3+this.moduleCount-8-3]=mod;}for(var i=0;i<18;i++){var mod=(!test&&((bits>>i)&1)==1);this.modules[i%3+this.moduleCount-8-3][Math.floor(i/3)]=mod;}},setupTypeInfo:function(test,maskPattern){var data=(this.errorCorrectLevel<<3)|maskPattern;var bits=QRUtil.getBCHTypeInfo(data);for(var i=0;i<15;i++){var mod=(!test&&((bits>>i)&1)==1);if(i<6){this.modules[i][8]=mod;}else if(i<8){this.modules[i+1][8]=mod;}else{this.modules[this.moduleCount-15+i][8]=mod;}}for(var i=0;i<15;i++){var mod=(!test&&((bits>>i)&1)==1);if(i<8){this.modules[8][this.moduleCount-i-1]=mod;}else if(i<9){this.modules[8][15-i-1+1]=mod;}else{this.modules[8][15-i-1]=mod;}}this.modules[this.moduleCount-8][8]=(!test);},mapData:function(data,maskPattern){var inc=-1;var row=this.moduleCount-1;var bitIndex=7;var byteIndex=0;for(var col=this.moduleCount-1;col>0;col-=2){if(col==6)col--;while(true){for(var c=0;c<2;c++){if(this.modules[row][col-c]==null){var dark=false;if(byteIndex<data.length){dark=(((data[byteIndex]>>>bitIndex)&1)==1);}var mask=QRUtil.getMask(maskPattern,row,col-c);if(mask){dark=!dark;}this.modules[row][col-c]=dark;bitIndex--;if(bitIndex==-1){byteIndex++;bitIndex=7;}}}row+=inc;if(row<0||this.moduleCount<=row){row-=inc;inc=-inc;break;}}}};QRCodeModel.PAD0=0xEC;QRCodeModel.PAD1=0x11;QRCodeModel.createData=function(typeNumber,errorCorrectLevel,dataList){var rsBlocks=QRRSBlock.getRSBlocks(typeNumber,errorCorrectLevel);var buffer=new QRBitBuffer();for(var i=0;i<dataList.length;i++){var data=dataList[i];buffer.put(data.mode,4);buffer.put(data.getLength(),QRUtil.getLengthInBits(data.mode,typeNumber));data.write(buffer);}var totalDataCount=0;for(var i=0;i<rsBlocks.length;i++){totalDataCount+=rsBlocks[i].dataCount;}if(buffer.getLengthInBits()>totalDataCount*8){throw new Error("code length overflow. ("+buffer.getLengthInBits()+">"+totalDataCount*8+")");}if(buffer.getLengthInBits()+4<=totalDataCount*8){buffer.put(0,4);}while(buffer.getLengthInBits()%8!=0){buffer.putBit(false);}while(true){if(buffer.getLengthInBits()>=totalDataCount*8){break;}buffer.put(QRCodeModel.PAD0,8);if(buffer.getLengthInBits()>=totalDataCount*8){break;}buffer.put(QRCodeModel.PAD1,8);}return QRCodeModel.createBytes(buffer,rsBlocks);};QRCodeModel.createBytes=function(buffer,rsBlocks){var offset=0;var maxDcCount=0;var maxEcCount=0;var dcdata=new Array(rsBlocks.length);var ecdata=new Array(rsBlocks.length);for(var r=0;r<rsBlocks.length;r++){var dcCount=rsBlocks[r].dataCount;var ecCount=rsBlocks[r].totalCount-dcCount;maxDcCount=Math.max(maxDcCount,dcCount);maxEcCount=Math.max(maxEcCount,ecCount);dcdata[r]=new Array(dcCount);for(var i=0;i<dcdata[r].length;i++){dcdata[r][i]=0xff&buffer.buffer[i+offset];}offset+=dcCount;var rsPoly=QRUtil.getErrorCorrectPolynomial(ecCount);var rawPoly=new QRPolynomial(dcdata[r],rsPoly.getLength()-1);var modPoly=rawPoly.mod(rsPoly);ecdata[r]=new Array(rsPoly.getLength()-1);for(var i=0;i<ecdata[r].length;i++){var modIndex=i+modPoly.getLength()-ecdata[r].length;ecdata[r][i]=(modIndex>=0)?modPoly.get(modIndex):0;}}var totalCodeCount=0;for(var i=0;i<rsBlocks.length;i++){totalCodeCount+=rsBlocks[i].totalCount;}var data=new Array(totalCodeCount);var index=0;for(var i=0;i<maxDcCount;i++){for(var r=0;r<rsBlocks.length;r++){if(i<dcdata[r].length){data[index++]=dcdata[r][i];}}}for(var i=0;i<maxEcCount;i++){for(var r=0;r<rsBlocks.length;r++){if(i<ecdata[r].length){data[index++]=ecdata[r][i];}}}return data;};var QRMode={MODE_NUMBER:1<<0,MODE_ALPHA_NUM:1<<1,MODE_8BIT_BYTE:1<<2,MODE_KANJI:1<<3};var QRErrorCorrectLevel={L:1,M:0,Q:3,H:2};var QRMaskPattern={PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7};var QRUtil={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[...trimmed for brevity...]
-// --- end of library ---
-/* Contents of qrcode.js end */
-})();
-
-            /* End qrcode.js */
-
+        // 页面加载动画
+        window.onload = () => {
+            const bar = document.querySelector('.progress-bar-fill');
+            bar.style.width = '0%';
+            setTimeout(() => { bar.style.width = '68%'; }, 100);
+        };
     </script>
 </body>
 </html>
